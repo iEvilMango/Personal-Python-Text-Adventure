@@ -55,7 +55,7 @@ class Weapon(object):
 
 	def __repr__(self):
 		return (prog_class_type + "(" + self.quality + ", " + self.level +
-				", " + self.hasPrefix + ", " + self.prefix ")")
+				", " + self.hasPrefix + ", " + self.prefix + ")")
 
 	def __str__(self):
 		output = self.quality_level[self.quality] + " "

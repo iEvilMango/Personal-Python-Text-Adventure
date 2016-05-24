@@ -107,7 +107,10 @@ class Player(object):
 
 
 	def get_attack(self, isRanged = False, isMagic = False):
-		attack_base = self.equipped_weapon.get_attack()
+		if (self.equipped_weapon != None):
+			attack_base = self.equipped_weapon.get_attack()
+		else:
+			attack_base = (0, 0, 0, 0)
 		melee_bonus = 0
 		if (not isRanged):
 			melee_bonus = self.statistics_base["attack"]

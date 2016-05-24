@@ -64,8 +64,6 @@ class Monster(object):
 	def __str__(self):
 		return self.name + " the " + self.class_name.lower()
 
-
-	# add if (equipped weapon exists): add attack from that
 	def get_attack(self, isRanged = False, isMagic = False):
 		if (self.equipped_weapon != None):
 			attack_base = self.equipped_weapon.get_attack()
