@@ -1,9 +1,5 @@
 import random
-
-def random_range(base_value, percent_range):
-	value_bonus = random.randint(0, percent_range + 1)
-	output = base_value - (base_value * (percent_range / 2) / 100)
-	return output + (value_bonus * base_value / 100)
+from Shared import *
 
 class Weapon(object):
 	weapon_prefixes = (
@@ -39,6 +35,7 @@ class Weapon(object):
 		self.quality = quality
 		self.level = level
 		self.prefix = None
+		self.hasPrefix = prefix
 		if (prefix):
 			if (prefix_given != None):
 				self.prefix = prefix_given
@@ -57,6 +54,10 @@ class Weapon(object):
 		}
 
 	def __repr__(self):
+		return (prog_class_type + "(" + self.quality + ", " + self.level +
+				", " + self.hasPrefix + ", " + self.prefix ")")
+
+	def __str__(self):
 		output = self.quality_level[self.quality] + " "
 
 		if self.prefix != None:
@@ -67,7 +68,7 @@ class Weapon(object):
 		return output
 
 	def get_desc(self):
-		output = "\ta " + self.quality_level[self.quality] + " quality " + self.__repr__()
+		output = "\ta " + str(self)
 		output += "\n\t" + self.desc
 		if self.prefix != None:
 			output += "\n\tthis weapon " + self.prefix_desc[self.prefix]
@@ -176,7 +177,7 @@ class Weapon(object):
 
 
 	def get_stats(self):
-		print("stats for " + self.__repr__())
+		print("stats for " + str(self))
 		print("\tclose range damage:     " + str(int(round(self.stats["close_range"]))))
 		print("\tlong range damage:      " + str(int(round(self.stats["long_range"]))))
 		print("\tfire damage:            " + str(int(round(self.stats["fire"]))))
@@ -192,6 +193,7 @@ class Weapon(object):
 # weapons
 class LongSword(Weapon):
 	class_name = "longsword"
+	prog_class_type = "LongSword"
 	desc = "a sword designed to be usable with either one hand or two"
 
 	def __init__(self, quality, level = 0, prefix = False, prefix_given = None):
@@ -208,6 +210,7 @@ class LongSword(Weapon):
 
 class DualCrossBows(Weapon):
 	class_name = "dual cross bows"
+	prog_class_type = "DualCrossBows"
 	desc = "a pair of crossbows intended to vanquish evil"
 	
 	def __init__(self, quality, level = 0, prefix = False, prefix_given = None):
@@ -223,6 +226,7 @@ class DualCrossBows(Weapon):
 
 class FireAndIceCrossBows(DualCrossBows):
 	class_name = "special dual cross bows"
+	prog_class_type = "FireAndIceCrossBows"
 	desc = "a pair of crossbows intended to vanquish evil with fire and ice"
 	
 	def __init__(self, quality, level = 0, prefix = False, prefix_given = None):

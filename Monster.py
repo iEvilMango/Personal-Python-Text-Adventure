@@ -1,10 +1,6 @@
 import random
 import Weapon
-
-def random_range(base_value, percent_range):
-	value_bonus = random.randint(0, percent_range + 1)
-	output = base_value - (base_value * (percent_range / 2) / 100)
-	return output + (value_bonus * base_value / 100)
+from Shared import *
 
 class Monster(object):
 	difficulty_level = ("easy", "normal", "exceptional")
@@ -62,10 +58,14 @@ class Monster(object):
 				self.statistics_base[key] = value * self.level_modifier[key]
 
 	def __repr__(self):
-		return self.name + " the " + self.class_name
+		return (self.class_name + "(" + self.name + ", " + 
+						self.level + ", " + self.difficulty + ")")
+
+	def __str__(self):
+		return self.name + " the " + self.class_name.lower()
 
 
-	#add if (equipped weapon exists): add attack from that
+	# add if (equipped weapon exists): add attack from that
 	def get_attack(self, isRanged = False, isMagic = False):
 		if (self.equipped_weapon != None):
 			attack_base = self.equipped_weapon.get_attack()
@@ -101,7 +101,7 @@ class Monster(object):
 
 
 class Goblin(Monster):
-	class_name = "goblin"
+	class_name = "Goblin"
 	desc = "\ta fairly weak mischievous, ugly, dwarflike creature"
 	aptitude = ("\tincapable of using magic, this type of monster"
 				+" also renders magic near useless against themselves")
@@ -158,7 +158,7 @@ class Goblin(Monster):
 		}
 
 class Dragon(Monster):
-	class_name = "dragon"
+	class_name = "Dragon"
 	desc = "\ta large conglomeration of a snake and a serpent"
 	aptitude = ("\tGreatly resitant to fire")
 	level_modifier = { 	# modifiers applied on level

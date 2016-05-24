@@ -1,42 +1,17 @@
 import Weapon
 import Monster
 import random
-
-def prompt_for(prompt, valid_responses):
-	while(True):
-		print (prompt)
-		options = ""
-		for item in valid_responses:
-			options += "[" + str(item) + "] "
-		print(options) # [1,2,3]  => [1] [2] [3]
-
-		response = input("")
-		for possible in valid_responses:
-			if (str(response).lower() == str(possible).lower()):
-				return possible
-
-		for possible in valid_responses:
-			if (str(response).lower() in str(possible).lower()):
-				return possible
-
-		if (str(response).lower() == "quit"):
-			quit()
-		print(str(response) + " is not a valid input, try again, or [quit]")
-
-def random_range(base_value, percent_range):
-	value_bonus = random.randint(0, percent_range + 1)
-	output = base_value - (base_value * (percent_range / 2) / 100)
-	return output + (value_bonus * base_value / 100)
-
+from Shared import *
 
 class Player(object):
 	
-	def __init__(self, name, level = 1):
+	def __init__(self, name, level = 1, inventory = list()):
 		self.name = name
 		self.level = level
 		self.alive = True
 
-		self.inventory = list()
+		# self.inventory = list()
+		self.inventory = inventory
 		self.gold = 1000
 		self.experience = 0
 
@@ -70,7 +45,6 @@ class Player(object):
 				self.current_health = 0
 				self.alive = False
 				print(self.name + " died")
-				# print("")
 			else:
 				if(damage_calc > 0):
 					print(self.name + " survived the hit")
@@ -102,16 +76,17 @@ class Player(object):
 				amount = 0
 
 	def __repr__(self):
-		return self.name + " the " + self.class_name
+		return (self.class_name + "(" + self.name + ", " + self.level + ", " +
+					 repr(self.inventory) + ")")
 
 	def __str__(self):
-		return self.__repr__()
+		return self.name + " the " + self.class_name.lower()
 
 	def display_inventory(self):
 		print(self.name + "'s inventory")
 		print("\tgold: " + str(self.gold))
 		for item in self.inventory:
-			print ("\t" + item.__repr__())
+			print ("\t" + str(item))
 
 	def equip_item(self):
 		if(len(self.inventory) > 0):
@@ -119,14 +94,14 @@ class Player(object):
 			corresponding_index = {}
 			count = 0
 			for item in self.inventory:
-				available_items.append(item.__repr__())
-				corresponding_index[item.__repr__()] = count
+				available_items.append(str(item))
+				corresponding_index[str(item)] = count
 				count +=1
 			choice = prompt_for("change " + self.name + "'s equipped item to what?",
 									available_items)
 
 			equipped_weapon = self.inventory[corresponding_index[choice]]
-			print(self.name + " equipped " + equipped_weapon.__repr__())
+			print(self.name + " equipped " + str(equipped_weapon))
 		else:
 			print("inventory is empty")
 
@@ -169,7 +144,7 @@ class Player(object):
 								   + " / " + str(int(round(self.statistics_base["mana"]))))
 
 class Warrior(Player):
-	class_name = "warrior"
+	class_name = "Warrior"
 	desc = "\ta warrior pledged to defend all against evil"
 	aptitude = "\tparticularly good with close ranged combat"
 
@@ -183,8 +158,8 @@ class Warrior(Player):
 		"intellect"		: 1.01
 	}
 
-	def __init__(self, name, level = 1):
-		super(Warrior, self).__init__(name, level)
+	def __init__(self, name, level = 1, inventory = list()):
+		super(Warrior, self).__init__(name, level, inventory)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: 1.2,
 			"melee defense"		: 1.3,

@@ -1,32 +1,7 @@
 import Monster
 import Weapon
 import Player
-
-def prompt_for(prompt, valid_responses):
-	while(True):
-		print (prompt)
-		options = ""
-		for item in valid_responses:
-			options += "[" + str(item) + "] "
-		print(options)
-
-		response = input("")
-		for possible in valid_responses:
-			if (str(response).lower() == str(possible).lower()):
-				return possible
-
-		for possible in valid_responses:
-			if (str(response).lower() in str(possible).lower()):
-				return possible
-
-		if (str(response).lower() == "quit"):
-			quit()
-		print(str(response) + " is not a valid input, try again, or [quit]")
-
-def random_range(base_value, percent_range):
-	value_bonus = random.randint(0, percent_range + 1)
-	output = base_value - (base_value * (percent_range / 2) / 100)
-	return output + (value_bonus * base_value / 100)
+from Shared import *
 
 def check_loot (drops, player):
 	if (drops != None):
@@ -35,7 +10,7 @@ def check_loot (drops, player):
 		print("the monster dropped " + str(drops["gold"]) + " gold!")
 
 		for item in drops["items"]:
-			response = prompt_for ("take " + item.__repr__() + "?",
+			response = prompt_for ("take " + str(item) + "?",
 							("Yes", "No"))
 			if (response.upper() == "YES"):
 				player.inventory.append(item)
@@ -46,7 +21,7 @@ def game_over(player):
 		print("you died, game over :(")
 
 def fight(enemy, player):
-	print("fighting " + enemy.__repr__())
+	print("fighting " + str(enemy))
 	while(enemy.alive and player.alive):
 		player.print_battle_stats()
 		
@@ -70,14 +45,9 @@ def fight(enemy, player):
 		game_over(player)
 
 
-#inventory = []
-#experience = 0
-#gold = 0
-
 player_name = input("What's your name? ")
 print("")
 
-# player = Player.Warrior(player_name)
 player = Player.CLASSES["warrior"](player_name)
 player.give_exp(1000)
 player.inventory.append(Weapon.TYPES["special dual crossbows"](1, 3, True))
