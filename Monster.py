@@ -2,7 +2,8 @@ import random
 import Weapon
 from Shared import *
 
-class Monster(object):
+# class Monster(object):
+class Monster(Character):
 	difficulty_level = ("easy", "normal", "exceptional")
 
 	def __init__(self, name, level = 1, difficulty = 1):
@@ -27,29 +28,32 @@ class Monster(object):
 		print("\tmovement speed:         " + str(int(round(self.statistics_base["movement speed"]))))
 		print("\tintellect:              " + str(int(round(self.statistics_base["intellect"]))))
 
-	def deal_damage(self, damage):
-		if(self.alive):
-			damage_calc = damage[0] / self.modifiers["melee defense"]
-			damage_calc += damage[1] / self.modifiers["ranged defense"]
-			damage_calc += damage[2] / self.modifiers["fire resistance"]
-			damage_calc += damage[3] / self.modifiers["ice resistance"]
+	# def deal_damage(self, damage):
+	# 	if(self.alive):
+	# 		damage_calc = damage[0] / self.modifiers["melee defense"]
+	# 		damage_calc += damage[1] / self.modifiers["ranged defense"]
+	# 		damage_calc += damage[2] / self.modifiers["fire resistance"]
+	# 		damage_calc += damage[3] / self.modifiers["ice resistance"]
 
-			overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
-			self.current_health -= overall_damage
-			print ("you dealt " + str(int(round(overall_damage))) + " damage")
-			if(self.current_health <= 0):
-				self.current_health = 0
-				self.alive = False
-				print(self.name + " died")
-				print("")
-				return self.drops
-			else:
-				if(damage_calc > 0):
-					print(self.name + " survived the hit")
-				else:
-					print(self.name + " was not affected")
-		else:
-			print("attacking the dead creature has no effect")
+	# 		overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
+	# 		self.current_health -= overall_damage
+	# 		print ("you dealt " + str(int(round(overall_damage))) + " damage")
+	# 		if(self.current_health <= 0):
+	# 			self.current_health = 0
+	# 			self.alive = False
+	# 			print(self.name + " died")
+	# 			print("")
+	# 			return self.drops
+	# 		else:
+	# 			if(damage_calc > 0):
+	# 				print(self.name + " survived the hit")
+	# 			else:
+	# 				print(self.name + " was not affected")
+	# 	else:
+	# 		print("attacking the dead creature has no effect")
+
+	def deal_damage(self, damage):
+		return super(Monster, self).deal_damage(damage, "attacking the dead creature has no effect")
 
 	def level_up(self):
 		if (self.level < 100):
@@ -63,39 +67,6 @@ class Monster(object):
 
 	def __str__(self):
 		return self.name + " the " + self.class_name.lower()
-
-	def get_attack(self, isRanged = False, isMagic = False):
-		if (self.equipped_weapon != None):
-			attack_base = self.equipped_weapon.get_attack()
-		else:
-			attack_base = (0, 0, 0, 0)
-		melee_bonus = 0
-		if (not isRanged):
-			melee_bonus = self.statistics_base["attack"]
-
-		ranged_bonus = 0
-		if (isRanged):
-			ranged_bonus = self.statistics_base["attack"]
-
-		fire_bonus = 0
-		if (isMagic and attack_base[2] != 0):
-			fire_bonus = self.statistics_base["intellect"]
-
-		ice_bonus = 0
-		if (isMagic and attack_base[3] != 0):
-			ice_bonus = self.statistics_base["intellect"]
-
-		output = (
-			int(round(attack_base[0] * self.modifiers["melee"] 
-						+ melee_bonus)),
-			int(round(attack_base[1] * self.modifiers["ranged"]
-						+ ranged_bonus)),
-			int(round(attack_base[2] * self.modifiers["magic"]
-						+ fire_bonus)),
-			int(round(attack_base[3] * self.modifiers["magic"]
-						+ ice_bonus))
-		)
-		return output
 
 
 class Goblin(Monster):

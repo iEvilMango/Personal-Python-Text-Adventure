@@ -3,17 +3,18 @@ import Monster
 import random
 from Shared import *
 
-class Player(object):
-	
+# class Player(object):
+
+class Player(Character):
 	def __init__(self, name, level = 1, inventory = list()):
 		self.name = name
 		self.level = level
 		self.alive = True
 
-		# self.inventory = list()
 		self.inventory = inventory
 		self.gold = 1000
 		self.experience = 0
+		self.drops = inventory
 
 	def get_desc(self):
 		return self.name + " is a " + self.class_name + "\n" + self.desc
@@ -30,28 +31,31 @@ class Player(object):
 		print("\tmovement speed:         " + str(int(round(self.statistics_base["movement speed"]))))
 		print("\tintellect:              " + str(int(round(self.statistics_base["intellect"]))))
 
+	# def deal_damage(self, damage):
+	# 	if(self.alive):
+	# 		damage_calc = damage[0] / self.modifiers["melee defense"]
+	# 		damage_calc += damage[1] / self.modifiers["ranged defense"]
+	# 		damage_calc += damage[2] / self.modifiers["fire resistance"]
+	# 		damage_calc += damage[3] / self.modifiers["ice resistance"]
+
+	# 		overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
+	# 		self.current_health -= overall_damage
+	# 		print (self.name + " was dealt " + str(int(round(overall_damage))) + " damage")
+
+	# 		if(self.current_health <= 0):
+	# 			self.current_health = 0
+	# 			self.alive = False
+	# 			print(self.name + " died")
+	# 		else:
+	# 			if(damage_calc > 0):
+	# 				print(self.name + " survived the hit")
+	# 			else:
+	# 				print(self.name + " was not affected")
+	# 	else:
+	# 		print("the dead body of " + self.name + " was attacked")
+
 	def deal_damage(self, damage):
-		if(self.alive):
-			damage_calc = damage[0] / self.modifiers["melee defense"]
-			damage_calc += damage[1] / self.modifiers["ranged defense"]
-			damage_calc += damage[2] / self.modifiers["fire resistance"]
-			damage_calc += damage[3] / self.modifiers["ice resistance"]
-
-			overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
-			self.current_health -= overall_damage
-			print (self.name + " was dealt " + str(int(round(overall_damage))) + " damage")
-
-			if(self.current_health <= 0):
-				self.current_health = 0
-				self.alive = False
-				print(self.name + " died")
-			else:
-				if(damage_calc > 0):
-					print(self.name + " survived the hit")
-				else:
-					print(self.name + " was not affected")
-		else:
-			print("the dead body of " + self.name + " was attacked")
+		return super(Player, self).deal_damage(damage, "the dead body of " + self.name + " was attacked")
 
 	def level_up(self):
 		if (self.level < 100):
@@ -106,45 +110,12 @@ class Player(object):
 			print("inventory is empty")
 
 
-	def get_attack(self, isRanged = False, isMagic = False):
-		if (self.equipped_weapon != None):
-			attack_base = self.equipped_weapon.get_attack()
-		else:
-			attack_base = (0, 0, 0, 0)
-		melee_bonus = 0
-		if (not isRanged):
-			melee_bonus = self.statistics_base["attack"]
-
-		ranged_bonus = 0
-		if (isRanged):
-			ranged_bonus = self.statistics_base["attack"]
-
-		fire_bonus = 0
-		if (isMagic and attack_base[2] != 0):
-			fire_bonus = self.statistics_base["intellect"]
-
-		ice_bonus = 0
-		if (isMagic and attack_base[3] != 0):
-			ice_bonus = self.statistics_base["intellect"]
-
-		output = (
-			int(round(attack_base[0] * self.modifiers["melee"] 
-						+ melee_bonus)),
-			int(round(attack_base[1] * self.modifiers["ranged"]
-						+ ranged_bonus)),
-			int(round(attack_base[2] * self.modifiers["magic"]
-						+ fire_bonus)),
-			int(round(attack_base[3] * self.modifiers["magic"]
-						+ ice_bonus))
-		)
-		return output
-
-	def print_battle_stats(self):
-		print("updated health for " + self.name)
-		print("\thealth points:          " + str(int(round(self.current_health)))
-								   + " / " + str(int(round(self.statistics_base["health"]))))
-		print("\tmana points:            " + str(int(round(self.current_mana)))
-								   + " / " + str(int(round(self.statistics_base["mana"]))))
+	# def print_battle_stats(self):
+	# 	print("updated health for " + self.name)
+	# 	print("\thealth points:          " + str(int(round(self.current_health)))
+	# 							   + " / " + str(int(round(self.statistics_base["health"]))))
+	# 	print("\tmana points:            " + str(int(round(self.current_mana)))
+	# 							   + " / " + str(int(round(self.statistics_base["mana"]))))
 
 class Warrior(Player):
 	class_name = "Warrior"
