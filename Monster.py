@@ -82,17 +82,15 @@ class Goblin(Monster):
 		self.current_health = self.statistics_base["health"]
 		self.current_mana = self.statistics_base["mana"]
 
-		self.items = list()
+		self.inventory = list()
 		sword = Weapon.LongSword(1, 2, True)
-		self.items.append(sword)
+		self.inventory.append(sword)
 		self.equipped_weapon = sword
 		self.drops = {
 			"experience" 	: 45 * level,
 			"gold"			: 25 * level,
-			"items"			: self.items
+			"items"			: self.inventory
 		}
-
-		self.inventory = self.drops
 
 class Dragon(Monster):
 	class_name = "Dragon"
@@ -140,16 +138,14 @@ class Dragon(Monster):
 		self.current_health = self.statistics_base["health"]
 		self.current_mana = self.statistics_base["mana"]
 
-		self.items = list()
-		self.items.append(Weapon.FireAndIceCrossBows(2,10,True))
+		self.inventory = list()
+		self.inventory.append(Weapon.FireAndIceCrossBows(2,10,True))
 
 		self.drops = {
 			"experience" 	: 100 * level,
 			"gold"			: 90 * level,
-			"items"			: self.items
+			"items"			: self.inventory
 		}
-
-		self.inventory = self.drops
 
 TYPES = {
 	"goblin" : Goblin,

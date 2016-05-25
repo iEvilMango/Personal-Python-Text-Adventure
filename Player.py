@@ -9,11 +9,15 @@ class Player(Character):
 		self.name = name
 		self.level = level
 		self.alive = True
-		
+
 		self.inventory = inventory
 		self.gold = 1000
 		self.experience = 0
-		self.drops = inventory
+		self.drops = {
+			"experience" 	: 500,
+			"gold"			: 500,
+			"items"			: self.inventory
+		}
 
 	def deal_damage(self, damage):
 		return super(Player, self).deal_damage(damage, "the dead body of " + self.name + " was attacked")
