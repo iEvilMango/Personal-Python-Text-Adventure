@@ -2,7 +2,6 @@ import random
 import Weapon
 from Shared import *
 
-# class Monster(object):
 class Monster(Character):
 	difficulty_level = ("easy", "normal", "exceptional")
 
@@ -12,54 +11,16 @@ class Monster(Character):
 		self.level = level
 		self.alive = True
 		self.equipped_weapon = None
-
-	def get_desc(self):
-		return self.name + " is a " + self.class_name + "\n" + self.desc
-
-	def examine(self):
-		print("an examination of " + self.name + " reveals: ")
-		print(self.aptitude)
-		print("\thealth points:          " + str(int(round(self.current_health)))
-								   + " / " + str(int(round(self.statistics_base["health"]))))
-		print("\tmana points:            " + str(int(round(self.current_mana)))
-								   + " / " + str(int(round(self.statistics_base["mana"]))))
-		print("\tendurance:              " + str(int(round(self.statistics_base["health"]))))
-		print("\tvitality:               " + str(int(round(self.statistics_base["health"]))))
-		print("\tmovement speed:         " + str(int(round(self.statistics_base["movement speed"]))))
-		print("\tintellect:              " + str(int(round(self.statistics_base["intellect"]))))
-
-	# def deal_damage(self, damage):
-	# 	if(self.alive):
-	# 		damage_calc = damage[0] / self.modifiers["melee defense"]
-	# 		damage_calc += damage[1] / self.modifiers["ranged defense"]
-	# 		damage_calc += damage[2] / self.modifiers["fire resistance"]
-	# 		damage_calc += damage[3] / self.modifiers["ice resistance"]
-
-	# 		overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
-	# 		self.current_health -= overall_damage
-	# 		print ("you dealt " + str(int(round(overall_damage))) + " damage")
-	# 		if(self.current_health <= 0):
-	# 			self.current_health = 0
-	# 			self.alive = False
-	# 			print(self.name + " died")
-	# 			print("")
-	# 			return self.drops
-	# 		else:
-	# 			if(damage_calc > 0):
-	# 				print(self.name + " survived the hit")
-	# 			else:
-	# 				print(self.name + " was not affected")
-	# 	else:
-	# 		print("attacking the dead creature has no effect")
+		self.experience = 0
 
 	def deal_damage(self, damage):
 		return super(Monster, self).deal_damage(damage, "attacking the dead creature has no effect")
 
 	def level_up(self):
-		if (self.level < 100):
-			self.level += 1
-			for key, value in self.statistics_base.items():
-				self.statistics_base[key] = value * self.level_modifier[key]
+		super(Monster, self).level_up(False)
+
+	def give_exp(self, amount):
+		super(Monster, self).give_exp(amount, False)
 
 	def __repr__(self):
 		return (self.class_name + "(" + self.name + ", " + 
@@ -68,6 +29,11 @@ class Monster(Character):
 	def __str__(self):
 		return self.name + " the " + self.class_name.lower()
 
+	def display_inventory(self):
+		super(Monster, self).display_inventory(False)
+
+	def equip_item(self):
+		super(Monster, self).equip_item()
 
 class Goblin(Monster):
 	class_name = "Goblin"
@@ -126,6 +92,8 @@ class Goblin(Monster):
 			"items"			: self.items
 		}
 
+		self.inventory = self.drops
+
 class Dragon(Monster):
 	class_name = "Dragon"
 	desc = "\ta large conglomeration of a snake and a serpent"
@@ -180,6 +148,8 @@ class Dragon(Monster):
 			"gold"			: 90 * level,
 			"items"			: self.items
 		}
+
+		self.inventory = self.drops
 
 TYPES = {
 	"goblin" : Goblin,

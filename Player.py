@@ -3,81 +3,26 @@ import Monster
 import random
 from Shared import *
 
-# class Player(object):
 
 class Player(Character):
 	def __init__(self, name, level = 1, inventory = list()):
 		self.name = name
 		self.level = level
 		self.alive = True
-
+		
 		self.inventory = inventory
 		self.gold = 1000
 		self.experience = 0
 		self.drops = inventory
 
-	def get_desc(self):
-		return self.name + " is a " + self.class_name + "\n" + self.desc
-
-	def examine(self):
-		print("an examination of " + self.name + " reveals: ")
-		print(self.aptitude)
-		print("\thealth points:          " + str(int(round(self.current_health)))
-								   + " / " + str(int(round(self.statistics_base["health"]))))
-		print("\tmana points:            " + str(int(round(self.current_mana)))
-								   + " / " + str(int(round(self.statistics_base["mana"]))))
-		print("\tendurance:              " + str(int(round(self.statistics_base["health"]))))
-		print("\tvitality:               " + str(int(round(self.statistics_base["health"]))))
-		print("\tmovement speed:         " + str(int(round(self.statistics_base["movement speed"]))))
-		print("\tintellect:              " + str(int(round(self.statistics_base["intellect"]))))
-
-	# def deal_damage(self, damage):
-	# 	if(self.alive):
-	# 		damage_calc = damage[0] / self.modifiers["melee defense"]
-	# 		damage_calc += damage[1] / self.modifiers["ranged defense"]
-	# 		damage_calc += damage[2] / self.modifiers["fire resistance"]
-	# 		damage_calc += damage[3] / self.modifiers["ice resistance"]
-
-	# 		overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
-	# 		self.current_health -= overall_damage
-	# 		print (self.name + " was dealt " + str(int(round(overall_damage))) + " damage")
-
-	# 		if(self.current_health <= 0):
-	# 			self.current_health = 0
-	# 			self.alive = False
-	# 			print(self.name + " died")
-	# 		else:
-	# 			if(damage_calc > 0):
-	# 				print(self.name + " survived the hit")
-	# 			else:
-	# 				print(self.name + " was not affected")
-	# 	else:
-	# 		print("the dead body of " + self.name + " was attacked")
-
 	def deal_damage(self, damage):
 		return super(Player, self).deal_damage(damage, "the dead body of " + self.name + " was attacked")
 
 	def level_up(self):
-		if (self.level < 100):
-			self.level += 1
-			print(self.name + " leveled up to level " + str(self.level))
-			for key, value in self.statistics_base.items():
-				self.statistics_base[key] = value * self.level_modifier[key]
-
-			self.current_health = self.statistics_base["health"]
-			self.current_mana = self.statistics_base["mana"]
+		super(Player, self).level_up(True)
 
 	def give_exp(self, amount):
-		print(self.name + " gained " + str(amount) + " experience!")
-		while (amount > 0):
-			experience_needed = 100 * self.level - self.experience
-			if (amount >= experience_needed):
-				amount -= experience_needed
-				self.level_up()
-				self.experience = 0
-			else:
-				self.experience += amount
-				amount = 0
+		super(Player, self).give_exp(amount, True)
 
 	def __repr__(self):
 		return (self.class_name + "(" + self.name + ", " + self.level + ", " +
@@ -87,35 +32,10 @@ class Player(Character):
 		return self.name + " the " + self.class_name.lower()
 
 	def display_inventory(self):
-		print(self.name + "'s inventory")
-		print("\tgold: " + str(self.gold))
-		for item in self.inventory:
-			print ("\t" + str(item))
+		super(Player, self).display_inventory(True)
 
 	def equip_item(self):
-		if(len(self.inventory) > 0):
-			available_items = []
-			corresponding_index = {}
-			count = 0
-			for item in self.inventory:
-				available_items.append(str(item))
-				corresponding_index[str(item)] = count
-				count +=1
-			choice = prompt_for("change " + self.name + "'s equipped item to what?",
-									available_items)
-
-			equipped_weapon = self.inventory[corresponding_index[choice]]
-			print(self.name + " equipped " + str(equipped_weapon))
-		else:
-			print("inventory is empty")
-
-
-	# def print_battle_stats(self):
-	# 	print("updated health for " + self.name)
-	# 	print("\thealth points:          " + str(int(round(self.current_health)))
-	# 							   + " / " + str(int(round(self.statistics_base["health"]))))
-	# 	print("\tmana points:            " + str(int(round(self.current_mana)))
-	# 							   + " / " + str(int(round(self.statistics_base["mana"]))))
+		super(Player, self).equip_item()
 
 class Warrior(Player):
 	class_name = "Warrior"
