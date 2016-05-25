@@ -72,7 +72,7 @@ class Character(object):
 			damage_calc += damage[2] / self.modifiers["fire resistance"]
 			damage_calc += damage[3] / self.modifiers["ice resistance"]
 
-			overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
+			overall_damage = damage_calc * 100 / self.statistics_base["endurance"] / 10
 			self.current_health -= overall_damage
 			print (self.name + " was dealt " + str(int(round(overall_damage))) + " damage")
 
@@ -124,16 +124,22 @@ class Character(object):
 		if(len(self.inventory) > 0):
 			available_items = []
 			corresponding_index = {}
-			count = 0
+			available_items.append("nothing")
+			corresponding_index["nothing"] = 0
+			count = 1
 			for item in self.inventory:
 				available_items.append(str(item))
 				corresponding_index[str(item)] = count
-				count +=1
+				count += 1
 			choice = prompt_for("change " + self.name + "'s equipped item to what?",
 									available_items)
 
-			equipped_weapon = self.inventory[corresponding_index[choice]]
-			print(self.name + " equipped " + str(equipped_weapon))
+			if(choice == "nothing"):
+				self.equipped_weapon = None
+				print(self.name + " now has no weapon equipped")
+			else:
+				self.equipped_weapon = self.inventory[corresponding_index[choice] - 1]
+				print(self.name + " equipped " + str(self.equipped_weapon))
 		else:
 			print("inventory is empty")
 
@@ -151,3 +157,9 @@ class Character(object):
 
 	def get_desc(self):
 		return self.name + " is a " + self.class_name + "\n" + self.desc
+
+	def view_equipped(self):
+		if(self.equipped_weapon == None):
+			print(self.name + " has nothing equipped")
+		else:
+			print(self.name + " has " + str(self.equipped_weapon) + " equipped")

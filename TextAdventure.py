@@ -45,10 +45,11 @@ def fight(enemy, player):
 		game_over(player)
 
 
-player_name = input("What's your name? ")
+player_name = input("what's your name? ")
 print("")
-
-player = Player.CLASSES["warrior"](player_name)
+class_choice = prompt_for("which class do you want to play as? ",
+								tuple(Player.CLASSES.keys()))
+player = Player.CLASSES[class_choice](player_name)
 player.give_exp(1000)
 player.inventory.append(Weapon.TYPES["special dual crossbows"](1, 3, True))
 player.display_inventory()
@@ -60,7 +61,7 @@ for x in range(0,100):
 		move = "None don't work here"
 		while (move.lower() != "fight the dragon" and move.lower() != "fight a goblin"):
 			print("what next?")
-			move = prompt_for("", ("display inventory", "equip item",
+			move = prompt_for("", ("display inventory", "equip item", "view equipped item",
 									"fight the dragon", "fight a goblin", "cheat"))
 
 			if (move.lower() ==  "display inventory"):
@@ -75,3 +76,5 @@ for x in range(0,100):
 				fight(Monster.TYPES["dragon"]("dragosan", 10, 1), player)
 			elif (move.lower() == "fight a goblin"):
 				fight(Monster.TYPES["goblin"]("gobbinmon"), player)
+			elif (move.lower() == "view equipped item"):
+				player.view_equipped()

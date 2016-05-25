@@ -3,7 +3,6 @@ import Monster
 import random
 from Shared import *
 
-
 class Player(Character):
 	def __init__(self, name, level = 1, inventory = list()):
 		self.name = name
@@ -14,8 +13,8 @@ class Player(Character):
 		self.gold = 1000
 		self.experience = 0
 		self.drops = {
-			"experience" 	: 500,
-			"gold"			: 500,
+			"experience" 	: 1000,
+			"gold"			: self.gold,
 			"items"			: self.inventory
 		}
 
@@ -90,6 +89,63 @@ class Warrior(Player):
 		self.inventory.append(Weapon.LongSword(1, 0, False))
 		self.equipped_weapon = self.inventory[0]
 
+class Monk(Player):
+	class_name = "Monk"
+	desc = "\ta religious figure dedicated to eradicating all monsters."
+	aptitude = "\tparticularly good with fighting with their hands"
+
+	level_modifier = { 	# modifiers applied on level
+		"health"		: 1.07,
+		"attack"		: 1.09,
+		"endurance"		: 1.01,
+		"vitality"		: 1.05,
+		"mana"			: 1.04,
+		"movement speed": 1.05,
+		"intellect"		: 1.05
+	}
+	
+	def get_attack(self):
+		if(self.equipped_weapon == None):
+			self.statistics_base["attack"] *= 2
+		damage = super(Monk, self).get_attack()
+		if(self.equipped_weapon == None):
+			self.statistics_base["attack"] /= 2
+		return damage
+
+	def __init__(self, name, level = 1, inventory = list()):
+		super(Monk, self).__init__(name, level, inventory)
+		self.modifiers = {		# modifiers for equipment
+			"melee"				: 1.3,
+			"melee defense"		: 1.3,
+			"ranged"			: .25,
+			"ranged defense"	: .25,
+			"magic"				: .25,
+			"defense"			: 1.2,
+			"magic defense"		: .9,
+			"fire resistance"	: 1.2,
+			"ice resistance"	: .6,
+			"speed"				: 1.4
+		}
+
+		self.statistics_base = {
+			"health"		: 110,	# health points
+			"attack"		: 145,	# attack bonus
+			"endurance"		: 70,	# defense bonus
+			"vitality"		: 40,	# ability to perform successive attacks w/o wearing out
+			"mana"			: 30,	# mana points
+			"movement speed": 110,	# how quickly they move
+			"intellect"		: 95	# Bonus to magic attack, intelligence checks
+		}
+
+		for key in self.statistics_base:
+			self.statistics_base[key] = (self.statistics_base[key]
+									* (self.level_modifier[key] ** level))
+		self.current_health = self.statistics_base["health"]
+		self.current_mana = self.statistics_base["mana"]
+
+		self.equipped_weapon = None
+
 CLASSES = {
-	"warrior" : Warrior
+	"warrior" : Warrior,
+	"monk" : Monk
 }
