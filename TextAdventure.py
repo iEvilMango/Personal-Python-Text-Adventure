@@ -62,7 +62,8 @@ for x in range(0,100):
 		while (move.lower() != "fight the dragon" and move.lower() != "fight a goblin"):
 			print("what next?")
 			move = prompt_for("", ("display inventory", "equip item", "view equipped item",
-									"fight the dragon", "fight a goblin", "cheat"))
+									"fight the dragon", "fight a goblin", "fight a random enemy",
+									"cheat"))
 
 			if (move.lower() ==  "display inventory"):
 				player.display_inventory()
@@ -76,5 +77,8 @@ for x in range(0,100):
 				fight(Monster.TYPES["dragon"]("dragosan", 10, 1), player)
 			elif (move.lower() == "fight a goblin"):
 				fight(Monster.TYPES["goblin"]("gobbinmon"), player)
+			elif (move.lower() == "fight a random enemy"):
+				fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), ("rando"), 0, 10, 0, 2),
+							player)
 			elif (move.lower() == "view equipped item"):
 				player.view_equipped()

@@ -2,6 +2,14 @@ import random
 import Weapon
 from Shared import *
 
+def get_random_enemy(enemies_in_area, names_possible, level_min,
+							level_max, difficulty_min, difficulty_max):
+	chosen_enemy = random.choice(enemies_in_area)
+	chosen_name = random.choice(names_possible)
+	chosen_level = random.choice(range(level_min, level_max + 1))
+	chosen_difficulty = random.choice(range(difficulty_min, difficulty_max + 1))
+	return TYPES[chosen_enemy](chosen_name, chosen_level, chosen_difficulty)
+
 class Monster(Character):
 	difficulty_level = ("easy", "normal", "exceptional")
 
