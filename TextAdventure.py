@@ -1,6 +1,7 @@
 import Monster
 import Weapon
 import Player
+import random
 from Shared import *
 
 def check_loot (drops, player):
@@ -26,7 +27,7 @@ def fight(enemy, player):
 		player.print_battle_stats()
 		
 		response = prompt_for("What do you want to do? " + enemy.name + " is waiting... ",
-								("attack", "examine enemy", "nothing"))
+								("attack", "examine enemy", "run away", "nothing"))
 
 		storage = None
 		if(response.lower() == "attack"):
@@ -36,6 +37,12 @@ def fight(enemy, player):
 			enemy.examine()
 		elif(response.lower() == "nothing"):
 			print ("the enemy is sad, they wanted to be attacked")
+		elif(response.lower() == "run away"):
+			if(random.choice(range(0, 100)) < 50):
+				print("you got away")
+				break
+			else:
+				print("you couldn't get away")
 
 		print("")
 		if(enemy.alive):
@@ -50,8 +57,6 @@ print("")
 class_choice = prompt_for("which class do you want to play as? ",
 								tuple(Player.CLASSES.keys()))
 player = Player.CLASSES[class_choice](player_name)
-player.give_exp(1000)
-player.inventory.append(Weapon.TYPES["special dual crossbows"](1, 3, True))
 player.display_inventory()
 
 move = "None don't work here"
@@ -78,7 +83,7 @@ for x in range(0,100):
 			elif (move.lower() == "fight a goblin"):
 				fight(Monster.TYPES["goblin"]("gobbinmon"), player)
 			elif (move.lower() == "fight a random enemy"):
-				fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), ("rando"), 0, 10, 0, 2),
+				fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), ("rando", "bubbles"), 0, 10, 0, 2),
 							player)
 			elif (move.lower() == "view equipped item"):
 				player.view_equipped()

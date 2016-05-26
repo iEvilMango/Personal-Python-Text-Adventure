@@ -1,3 +1,5 @@
+import random
+
 def prompt_for(prompt, valid_responses):
 	while(True):
 		print (prompt)
@@ -73,6 +75,8 @@ class Character(object):
 			damage_calc += damage[3] / self.modifiers["ice resistance"]
 
 			overall_damage = damage_calc * 100 / self.statistics_base["endurance"] / 10
+			overall_damage *= (random.randint(0, 30) + 85) / 100
+
 			self.current_health -= overall_damage
 			print (self.name + " was dealt " + str(int(round(overall_damage))) + " damage")
 

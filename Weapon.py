@@ -243,3 +243,18 @@ TYPES = {
 	"dual crossbows" : DualCrossBows,
 	"special dual crossbows" : FireAndIceCrossBows
 }
+
+def get_random_weapon(weapon_possibilities, quality_min, quality_max,
+							level_min, level_max, prefix_possible,
+							potential_prefixes = Weapon.weapon_prefixes):
+	chosen_weapon = random.choice(weapon_possibilities)
+	chosen_level = random.choice(range(level_min, level_max + 1))
+	chosen_quality = random.choice(range(quality_min, quality_max + 1))
+	prefix_given = False
+	chosen_prefix = ""
+	if(prefix_possible):
+		if(random.choice([True, False])):
+			prefix_given = True
+			chosen_prefix = random.choice(potential_prefixes)
+	return TYPES[chosen_weapon](chosen_quality, chosen_level,
+									prefix_given, chosen_prefix)
