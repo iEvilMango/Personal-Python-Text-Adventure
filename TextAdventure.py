@@ -83,7 +83,7 @@ for x in range(0,100):
 			elif (move.lower() == "fight a goblin"):
 				fight(Monster.TYPES["goblin"]("gobbinmon"), player)
 			elif (move.lower() == "fight a random enemy"):
-				fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), ("rando", "bubbles"), 0, 10, 0, 2),
+				fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), ("rando", "bubbles"), 3, 10, 0, 2),
 							player)
 			elif (move.lower() == "view equipped item"):
 				player.view_equipped()
