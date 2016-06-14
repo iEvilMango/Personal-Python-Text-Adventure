@@ -26,6 +26,9 @@ def random_range(base_value, percent_range):
 	output = base_value - (base_value * (percent_range / 2) / 100)
 	return output + (value_bonus * base_value / 100)
 
+def getRoundedStr(input):
+	return str(int(round(input)))
+
 class Character(object):
 	def get_attack(self, isRanged = False, isMagic = False):
 		if (self.equipped_weapon != None):
@@ -150,14 +153,14 @@ class Character(object):
 	def examine(self):
 		print("an examination of " + self.name + " reveals: ")
 		print(self.aptitude)
-		print("\thealth points:          " + str(int(round(self.current_health)))
-								   + " / " + str(int(round(self.statistics_base["health"]))))
-		print("\tmana points:            " + str(int(round(self.current_mana)))
-								   + " / " + str(int(round(self.statistics_base["mana"]))))
-		print("\tendurance:              " + str(int(round(self.statistics_base["health"]))))
-		print("\tvitality:               " + str(int(round(self.statistics_base["health"]))))
-		print("\tmovement speed:         " + str(int(round(self.statistics_base["movement speed"]))))
-		print("\tintellect:              " + str(int(round(self.statistics_base["intellect"]))))
+		print("\thealth points:          " + getRoundedStr(self.current_health)
+								   + " / " + getRoundedStr(self.statistics_base["health"]))
+		print("\tmana points:            " + getRoundedStr(self.current_mana)
+								   + " / " + getRoundedStr(self.statistics_base["mana"]))
+		print("\tendurance:              " + getRoundedStr(self.statistics_base["health"]))
+		print("\tvitality:               " + getRoundedStr(self.statistics_base["health"]))
+		print("\tmovement speed:         " + getRoundedStr(self.statistics_base["movement speed"]))
+		print("\tintellect:              " + getRoundedStr(self.statistics_base["intellect"]))
 
 	def get_desc(self):
 		return self.name + " is a " + self.class_name + "\n" + self.desc

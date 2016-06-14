@@ -44,7 +44,7 @@ class Monster(Character):
 		super(Monster, self).equip_item()
 
 class Goblin(Monster):
-	class_name = "Goblin"
+	class_name = "goblin"
 	desc = "\ta fairly weak mischievous, ugly, dwarflike creature"
 	aptitude = ("\tincapable of using magic, this type of monster"
 				+" also renders magic near useless against themselves")
@@ -101,7 +101,7 @@ class Goblin(Monster):
 		}
 
 class Dragon(Monster):
-	class_name = "Dragon"
+	class_name = "dragon"
 	desc = "\ta large conglomeration of a snake and a serpent"
 	aptitude = ("\tgreatly resitant to fire")
 	level_modifier = { 	# modifiers applied on level
@@ -155,7 +155,7 @@ class Dragon(Monster):
 		}
 
 class Eagle(Monster):
-	class_name = "Giant Eagle"
+	class_name = "giant eagle"
 	desc = "\ta giant american eagle"
 	aptitude = ("\tparticularly fast and aggressive")
 	level_modifier = { 	# modifiers applied on level
@@ -208,9 +208,63 @@ class Eagle(Monster):
 			"items"			: self.inventory
 		}
 
+class DireWolf(Monster):
+	class_name = "dire wolf"
+	desc = "\ta large wolf, capable of leading any pack"
+	aptitude = ("\tparticularly fast and aggressive")
+	level_modifier = { 	# modifiers applied on level
+		"health"		: 1.02,
+		"attack"		: 1.11,
+		"endurance"		: 1.01,
+		"vitality"		: 1.05,
+		"mana"			: 1,
+		"movement speed": 1.08,
+		"intellect"		: 1
+	}
+
+	def __init__(self, name, level = 1, difficulty = 1):
+		super(DireWolf, self).__init__(name, level, difficulty)
+		self.modifiers = {		# modifiers for equipment
+			"melee"				: 1.3,
+			"melee defense"		: 1,
+			"ranged"			: 1.1,
+			"ranged defense"	: 0.8,
+			"magic"				: 0,
+			"defense"			: 1,
+			"magic defense"		: 1,
+			"fire resistance"	: .5,
+			"ice resistance"	: 2,
+			"speed"				: 1.5
+		}
+
+		self.statistics_base = {
+			"health"		: 55 +  (15 * difficulty),
+			"attack"		: 140 +  (25 * difficulty),
+			"endurance"		: 100 +  (20 * difficulty),
+			"vitality"		: 80  +  (8 * difficulty),
+			"mana"			: 100 +  (4 * difficulty),
+			"movement speed": 135 +  (20 * difficulty),
+			"intellect"		: 100 +  (5 * difficulty)
+		}
+
+		for key in self.statistics_base:
+			self.statistics_base[key] = (self.statistics_base[key]
+									* (self.level_modifier[key] ** level))
+		self.current_health = self.statistics_base["health"]
+		self.current_mana = self.statistics_base["mana"]
+
+		self.inventory = list()
+		self.inventory.append(Weapon.FireAndIceCrossBows(2,10,True))
+
+		self.drops = {
+			"experience" 	: 50 * level,
+			"gold"			: 30 * level,
+			"items"			: self.inventory
+		}
 
 TYPES = {
 	"goblin" 		: Goblin,
 	"dragon" 		: Dragon,
-	"giant eagle"	: Eagle
+	"giant eagle"	: Eagle,
+	"dire wolf"		: DireWolf
 }
