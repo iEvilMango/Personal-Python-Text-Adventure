@@ -1,12 +1,16 @@
 import random
 import Weapon
+from Shared import *
 
-def random_range(base_value, percent_range):
-	value_bonus = random.randint(0, percent_range + 1)
-	output = base_value - (base_value * (percent_range / 2) / 100)
-	return output + (value_bonus * base_value / 100)
+def get_random_enemy(enemies_in_area, names_possible, level_min,
+							level_max, difficulty_min, difficulty_max):
+	chosen_enemy = random.choice(enemies_in_area)
+	chosen_name = random.choice(names_possible)
+	chosen_level = random.choice(range(level_min, level_max + 1))
+	chosen_difficulty = random.choice(range(difficulty_min, difficulty_max + 1))
+	return TYPES[chosen_enemy](chosen_name, chosen_level, chosen_difficulty)
 
-class Monster(object):
+class Monster(Character):
 	difficulty_level = ("easy", "normal", "exceptional")
 
 	def __init__(self, name, level = 1, difficulty = 1):
@@ -15,90 +19,29 @@ class Monster(object):
 		self.level = level
 		self.alive = True
 		self.equipped_weapon = None
-
-	def get_desc(self):
-		return self.name + " is a " + self.class_name + "\n" + self.desc
-
-	def examine(self):
-		print("an examination of " + self.name + " reveals: ")
-		print(self.aptitude)
-		print("\thealth points:          " + str(int(round(self.current_health)))
-								   + " / " + str(int(round(self.statistics_base["health"]))))
-		print("\tmana points:            " + str(int(round(self.current_mana)))
-								   + " / " + str(int(round(self.statistics_base["mana"]))))
-		print("\tendurance:              " + str(int(round(self.statistics_base["health"]))))
-		print("\tvitality:               " + str(int(round(self.statistics_base["health"]))))
-		print("\tmovement speed:         " + str(int(round(self.statistics_base["movement speed"]))))
-		print("\tintellect:              " + str(int(round(self.statistics_base["intellect"]))))
+		self.experience = 0
 
 	def deal_damage(self, damage):
-		if(self.alive):
-			damage_calc = damage[0] / self.modifiers["melee defense"]
-			damage_calc += damage[1] / self.modifiers["ranged defense"]
-			damage_calc += damage[2] / self.modifiers["fire resistance"]
-			damage_calc += damage[3] / self.modifiers["ice resistance"]
-
-			overall_damage = damage_calc * 100 / self.statistics_base["endurance"]
-			self.current_health -= overall_damage
-			print ("you dealt " + str(int(round(overall_damage))) + " damage")
-			if(self.current_health <= 0):
-				self.current_health = 0
-				self.alive = False
-				print(self.name + " died")
-				print("")
-				return self.drops
-			else:
-				if(damage_calc > 0):
-					print(self.name + " survived the hit")
-				else:
-					print(self.name + " was not affected")
-		else:
-			print("attacking the dead creature has no effect")
+		return super(Monster, self).deal_damage(damage, "attacking the dead creature has no effect")
 
 	def level_up(self):
-		if (self.level < 100):
-			self.level += 1
-			for key, value in self.statistics_base.items():
-				self.statistics_base[key] = value * self.level_modifier[key]
+		super(Monster, self).level_up(False)
+
+	def give_exp(self, amount):
+		super(Monster, self).give_exp(amount, False)
 
 	def __repr__(self):
-		return self.name + " the " + self.class_name
+		return (self.class_name + "(" + self.name + ", " + 
+						self.level + ", " + self.difficulty + ")")
 
+	def __str__(self):
+		return self.name + " the " + self.class_name.lower()
 
-	#add if (equipped weapon exists): add attack from that
-	def get_attack(self, isRanged = False, isMagic = False):
-		if (self.equipped_weapon != None):
-			attack_base = self.equipped_weapon.get_attack()
-		else:
-			attack_base = (0, 0, 0, 0)
-		melee_bonus = 0
-		if (not isRanged):
-			melee_bonus = self.statistics_base["attack"]
+	def display_inventory(self):
+		super(Monster, self).display_inventory(False)
 
-		ranged_bonus = 0
-		if (isRanged):
-			ranged_bonus = self.statistics_base["attack"]
-
-		fire_bonus = 0
-		if (isMagic and attack_base[2] != 0):
-			fire_bonus = self.statistics_base["intellect"]
-
-		ice_bonus = 0
-		if (isMagic and attack_base[3] != 0):
-			ice_bonus = self.statistics_base["intellect"]
-
-		output = (
-			int(round(attack_base[0] * self.modifiers["melee"] 
-						+ melee_bonus)),
-			int(round(attack_base[1] * self.modifiers["ranged"]
-						+ ranged_bonus)),
-			int(round(attack_base[2] * self.modifiers["magic"]
-						+ fire_bonus)),
-			int(round(attack_base[3] * self.modifiers["magic"]
-						+ ice_bonus))
-		)
-		return output
-
+	def equip_item(self):
+		super(Monster, self).equip_item()
 
 class Goblin(Monster):
 	class_name = "goblin"
@@ -147,20 +90,20 @@ class Goblin(Monster):
 		self.current_health = self.statistics_base["health"]
 		self.current_mana = self.statistics_base["mana"]
 
-		self.items = list()
+		self.inventory = list()
 		sword = Weapon.LongSword(1, 2, True)
-		self.items.append(sword)
+		self.inventory.append(sword)
 		self.equipped_weapon = sword
 		self.drops = {
 			"experience" 	: 45 * level,
 			"gold"			: 25 * level,
-			"items"			: self.items
+			"items"			: self.inventory
 		}
 
 class Dragon(Monster):
 	class_name = "dragon"
 	desc = "\ta large conglomeration of a snake and a serpent"
-	aptitude = ("\tGreatly resitant to fire")
+	aptitude = ("\tgreatly resitant to fire")
 	level_modifier = { 	# modifiers applied on level
 		"health"		: 1.04,
 		"attack"		: 1.1,
@@ -177,8 +120,8 @@ class Dragon(Monster):
 			"melee"				: 1.2,
 			"melee defense"		: 1.1,
 			"ranged"			: 1.2,
-			"ranged defense"	: 1.0,
-			"magic"				: 0,
+			"ranged defense"	: 1,
+			"magic"				: 1,
 			"defense"			: 1,
 			"magic defense"		: 1,
 			"fire resistance"	: 2,
@@ -196,6 +139,59 @@ class Dragon(Monster):
 			"intellect"		: 100 +  (5 * difficulty)
 		}
 
+		for key in self.statistics_base:
+			self.statistics_base[key] = (self.statistics_base[key]
+									* (self.level_modifier[key] ** level))
+		self.current_health = self.statistics_base["health"]
+		self.current_mana = self.statistics_base["mana"]
+
+		self.inventory = list()
+		self.inventory.append(Weapon.FireAndIceCrossBows(2,10,True))
+
+		self.drops = {
+			"experience" 	: 100 * level,
+			"gold"			: 90 * level,
+			"items"			: self.inventory
+		}
+
+class Eagle(Monster):
+	class_name = "giant eagle"
+	desc = "\ta giant american eagle"
+	aptitude = ("\tparticularly fast and aggressive")
+	level_modifier = { 	# modifiers applied on level
+		"health"		: 1.06,
+		"attack"		: 1.1,
+		"endurance"		: 1.02,
+		"vitality"		: 1.08,
+		"mana"			: 1,
+		"movement speed": 1.06,
+		"intellect"		: 1
+	}
+
+	def __init__(self, name, level = 1, difficulty = 1):
+		super(Eagle, self).__init__(name, level, difficulty)
+		self.modifiers = {		# modifiers for equipment
+			"melee"				: 1.2,
+			"melee defense"		: 1.1,
+			"ranged"			: 1.2,
+			"ranged defense"	: 1.0,
+			"magic"				: 0,
+			"defense"			: 1,
+			"magic defense"		: 1,
+			"fire resistance"	: 2,
+			"ice resistance"	: 2,
+			"speed"				: 1.5
+		}
+
+		self.statistics_base = {
+			"health"		: 65 +  (15 * difficulty),
+			"attack"		: 135 +  (25 * difficulty),
+			"endurance"		: 100 +  (20 * difficulty),
+			"vitality"		: 80  +  (8 * difficulty),
+			"mana"			: 100 +  (4 * difficulty),
+			"movement speed": 150 +  (20 * difficulty),
+			"intellect"		: 100 +  (5 * difficulty)
+		}
 
 		for key in self.statistics_base:
 			self.statistics_base[key] = (self.statistics_base[key]
@@ -203,16 +199,72 @@ class Dragon(Monster):
 		self.current_health = self.statistics_base["health"]
 		self.current_mana = self.statistics_base["mana"]
 
-		self.items = list()
-		self.items.append(Weapon.FireAndIceCrossBows(2,10,True))
+		self.inventory = list()
+		self.inventory.append(Weapon.FireAndIceCrossBows(2,10,True))
 
 		self.drops = {
-			"experience" 	: 100 * level,
-			"gold"			: 90 * level,
-			"items"			: self.items
+			"experience" 	: 60 * level,
+			"gold"			: 65 * level,
+			"items"			: self.inventory
+		}
+
+class DireWolf(Monster):
+	class_name = "dire wolf"
+	desc = "\ta large wolf, capable of leading any pack"
+	aptitude = ("\tparticularly fast and aggressive")
+	level_modifier = { 	# modifiers applied on level
+		"health"		: 1.02,
+		"attack"		: 1.11,
+		"endurance"		: 1.01,
+		"vitality"		: 1.05,
+		"mana"			: 1,
+		"movement speed": 1.08,
+		"intellect"		: 1
+	}
+
+	def __init__(self, name, level = 1, difficulty = 1):
+		super(DireWolf, self).__init__(name, level, difficulty)
+		self.modifiers = {		# modifiers for equipment
+			"melee"				: 1.3,
+			"melee defense"		: 1,
+			"ranged"			: 1.1,
+			"ranged defense"	: 0.8,
+			"magic"				: 0,
+			"defense"			: 1,
+			"magic defense"		: 1,
+			"fire resistance"	: .5,
+			"ice resistance"	: 2,
+			"speed"				: 1.5
+		}
+
+		self.statistics_base = {
+			"health"		: 55 +  (15 * difficulty),
+			"attack"		: 140 +  (25 * difficulty),
+			"endurance"		: 100 +  (20 * difficulty),
+			"vitality"		: 80  +  (8 * difficulty),
+			"mana"			: 100 +  (4 * difficulty),
+			"movement speed": 135 +  (20 * difficulty),
+			"intellect"		: 100 +  (5 * difficulty)
+		}
+
+		for key in self.statistics_base:
+			self.statistics_base[key] = (self.statistics_base[key]
+									* (self.level_modifier[key] ** level))
+		self.current_health = self.statistics_base["health"]
+		self.current_mana = self.statistics_base["mana"]
+
+		self.inventory = list()
+		self.inventory.append(Weapon.FireAndIceCrossBows(2,10,True))
+
+		self.drops = {
+			"experience" 	: 50 * level,
+			"gold"			: 30 * level,
+			"items"			: self.inventory
 		}
 
 TYPES = {
-	"goblin" : Goblin,
-	"dragon" : Dragon
+	"goblin" 		: Goblin,
+	"dragon" 		: Dragon,
+	"giant eagle"	: Eagle,
+	"dire wolf"		: DireWolf
 }

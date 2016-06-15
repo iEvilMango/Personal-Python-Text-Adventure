@@ -1,32 +1,8 @@
 import Monster
 import Weapon
 import Player
-
-def prompt_for(prompt, valid_responses):
-	while(True):
-		print (prompt)
-		options = ""
-		for item in valid_responses:
-			options += "[" + str(item) + "] "
-		print(options)
-
-		response = input("")
-		for possible in valid_responses:
-			if (str(response).lower() == str(possible).lower()):
-				return possible
-
-		for possible in valid_responses:
-			if (str(response).lower() in str(possible).lower()):
-				return possible
-
-		if (str(response).lower() == "quit"):
-			quit()
-		print(str(response) + " is not a valid input, try again, or [quit]")
-
-def random_range(base_value, percent_range):
-	value_bonus = random.randint(0, percent_range + 1)
-	output = base_value - (base_value * (percent_range / 2) / 100)
-	return output + (value_bonus * base_value / 100)
+import random
+from Shared import *
 
 def check_loot (drops, player):
 	if (drops != None):
@@ -35,7 +11,7 @@ def check_loot (drops, player):
 		print("the monster dropped " + str(drops["gold"]) + " gold!")
 
 		for item in drops["items"]:
-			response = prompt_for ("take " + item.__repr__() + "?",
+			response = prompt_for ("take " + str(item) + "?",
 							("Yes", "No"))
 			if (response.upper() == "YES"):
 				player.inventory.append(item)
@@ -46,12 +22,12 @@ def game_over(player):
 		print("you died, game over :(")
 
 def fight(enemy, player):
-	print("fighting " + enemy.__repr__())
+	print("fighting " + str(enemy))
 	while(enemy.alive and player.alive):
 		player.print_battle_stats()
 		
 		response = prompt_for("What do you want to do? " + enemy.name + " is waiting... ",
-								("attack", "examine enemy", "nothing"))
+								("attack", "examine enemy", "run away", "nothing"))
 
 		storage = None
 		if(response.lower() == "attack"):
@@ -61,6 +37,12 @@ def fight(enemy, player):
 			enemy.examine()
 		elif(response.lower() == "nothing"):
 			print ("the enemy is sad, they wanted to be attacked")
+		elif(response.lower() == "run away"):
+			if(random.choice(range(0, 100)) < 50):
+				print("you got away")
+				break
+			else:
+				print("you couldn't get away")
 
 		print("")
 		if(enemy.alive):
@@ -70,17 +52,11 @@ def fight(enemy, player):
 		game_over(player)
 
 
-#inventory = []
-#experience = 0
-#gold = 0
-
-player_name = input("What's your name? ")
+player_name = input("what's your name? ")
 print("")
-
-# player = Player.Warrior(player_name)
-player = Player.CLASSES["warrior"](player_name)
-player.give_exp(1000)
-player.inventory.append(Weapon.TYPES["special dual crossbows"](1, 3, True))
+class_choice = prompt_for("which class do you want to play as? ",
+								tuple(Player.CLASSES.keys()))
+player = Player.CLASSES[class_choice](player_name)
 player.display_inventory()
 
 move = "None don't work here"
@@ -90,8 +66,9 @@ for x in range(0,100):
 		move = "None don't work here"
 		while (move.lower() != "fight the dragon" and move.lower() != "fight a goblin"):
 			print("what next?")
-			move = prompt_for("", ("display inventory", "equip item",
-									"fight the dragon", "fight a goblin", "cheat"))
+			move = prompt_for("", ("display inventory", "equip item", "view equipped item",
+									"fight the dragon", "fight a goblin", "fight a random enemy",
+									"cheat"))
 
 			if (move.lower() ==  "display inventory"):
 				player.display_inventory()
@@ -105,3 +82,8 @@ for x in range(0,100):
 				fight(Monster.TYPES["dragon"]("dragosan", 10, 1), player)
 			elif (move.lower() == "fight a goblin"):
 				fight(Monster.TYPES["goblin"]("gobbinmon"), player)
+			elif (move.lower() == "fight a random enemy"):
+				fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), ("rando", "bubbles"), 3, 10, 0, 2),
+							player)
+			elif (move.lower() == "view equipped item"):
+				player.view_equipped()
