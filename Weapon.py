@@ -232,16 +232,34 @@ class FireAndIceCrossBows(DualCrossBows):
 	def __init__(self, quality, level = 0, prefix = False, prefix_given = None):
 		super(FireAndIceCrossBows, self).__init__(quality, level, prefix, prefix_given)
 		bonus = 15
-		for x in range(0,level):
+		for x in range(0, level):
 			bonus *= 1.1
 		self.stats["fire"] += bonus
 		self.stats["ice"] += bonus
 		self.stats["long_range"] = bonus
 
+class GreatAxe(Weapon):
+	class_name = "great axe"
+	prog_class_type = "GreatAxe"
+	desc = "a giant axe that necessitates both hands to wield competently"
+
+	def __init__(self, quality, level = 0, prefix = False, prefix_given = None):
+		super(GreatAxe, self).__init__(quality, level, prefix, prefix_given)
+		self.stats["close_range"] = 85
+		self.stats["accuracy"] = 70
+		self.stats["weight"] = 10
+		self.stats["critical"] = 10
+		self.stats["speed"] = 50
+		self.stats["defense"] = 55
+		self.get_prefix_effect()
+		self.get_quality_modif()
+		self.get_level_modif(level)
+
 TYPES = {
-	"longsword" : LongSword,
-	"dual crossbows" : DualCrossBows,
-	"special dual crossbows" : FireAndIceCrossBows
+	"longsword" 				: LongSword,
+	"dual crossbows" 			: DualCrossBows,
+	"special dual crossbows"	: FireAndIceCrossBows,
+	"great axe" 				: GreatAxe
 }
 
 def get_random_weapon(weapon_possibilities, quality_min, quality_max,

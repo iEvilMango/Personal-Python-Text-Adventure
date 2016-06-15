@@ -41,7 +41,7 @@ class Player(Character):
 		super(Player, self).equip_item()
 
 class Warrior(Player):
-	class_name = "Warrior"
+	class_name = "warrior"
 	desc = "\ta warrior pledged to defend all against evil"
 	aptitude = "\tparticularly good with close ranged combat"
 
@@ -90,7 +90,7 @@ class Warrior(Player):
 		self.equipped_weapon = self.inventory[0]
 
 class Monk(Player):
-	class_name = "Monk"
+	class_name = "monk"
 	desc = "\ta religious figure dedicated to eradicating all monsters."
 	aptitude = "\tparticularly good with fighting with their hands"
 
@@ -145,7 +145,69 @@ class Monk(Player):
 
 		self.equipped_weapon = None
 
+class DarkKnight(Player):
+	class_name = "dark knight"
+	desc = "\twilling to do whatever is necessary to accomplish their goals"
+	aptitude = "\tuses their own health as a resource to increase their power"
+
+	level_modifier = { 	# modifiers applied on level
+		"health"		: 1.07,
+		"attack"		: 1.08,
+		"endurance"		: 1.01,
+		"vitality"		: 1.02,
+		"mana"			: 1.07,
+		"movement speed": 1.01,
+		"intellect"		: 1.04
+	}
+
+	def get_attack(self, isRanged = False, isMagic = False):
+		life_loss = self.statistics_base["health"] / 10
+		self.current_health = max(0, self.current_health - life_loss)
+		if(self.current_health == 0):
+			print(self.name + " made this attack with their dying breath")
+			self.alive = False
+		else:
+			print(self.name + " took " + getRoundedStr(life_loss) +
+					" damage to increase their power")
+		return super(DarkKnight, self).get_attack(isRanged, isMagic)
+
+	def __init__(self, name, level = 1, inventory = list()):
+		super(DarkKnight, self).__init__(name, level, inventory)
+		self.modifiers = {		# modifiers for equipment
+			"melee"				: 1.4,
+			"melee defense"		: 1.3,
+			"ranged"			: .5,
+			"ranged defense"	: .5,
+			"magic"				: 1.2,
+			"defense"			: 1,
+			"magic defense"		: 1.2,
+			"fire resistance"	: 1.2,
+			"ice resistance"	: 1.2,
+			"speed"				: 1.2
+		}
+
+		self.statistics_base = {
+			"health"		: 110,	# health points
+			"attack"		: 135,	# attack bonus
+			"endurance"		: 80,	# defense bonus
+			"vitality"		: 60,	# ability to perform successive attacks w/o wearing out
+			"mana"			: 100,	# mana points
+			"movement speed": 90,	# how quickly they move
+			"intellect"		: 95	# Bonus to magic attack, intelligence checks
+		}
+
+		for key in self.statistics_base:
+			self.statistics_base[key] = (self.statistics_base[key]
+									* (self.level_modifier[key] ** level))
+		self.current_health = self.statistics_base["health"]
+		self.current_mana = self.statistics_base["mana"]
+
+		#Change weapon to two handed axe#
+		self.inventory.append(Weapon.GreatAxe(1, 2, True))
+		self.equipped_weapon = self.inventory[0]
+
 CLASSES = {
 	"warrior" : Warrior,
-	"monk" : Monk
+	"monk" : Monk,
+	"dark knight" : DarkKnight
 }
