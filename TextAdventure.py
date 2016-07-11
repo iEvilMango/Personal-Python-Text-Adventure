@@ -18,7 +18,7 @@ def check_loot (drops, player):
 				print("you stashed the item in your inventory")
 
 def game_over(player):
-	if(not player.alive):
+	if not player.alive:
 		print("you died, game over :(")
 
 def fight(enemy, player):
