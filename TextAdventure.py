@@ -60,8 +60,8 @@ player = Player.CLASSES[class_choice](player_name)
 player.display_inventory()
 
 move = "None don't work here"
-print("current max of 100 turns")
-for x in range(0,100):
+
+while(True): 
 	if (player.alive):
 		move = "None don't work here"
 		while (move.lower() != "fight the dragon" and move.lower() != "fight a goblin"):

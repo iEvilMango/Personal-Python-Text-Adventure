@@ -3,8 +3,18 @@ import Monster
 import random
 from Shared import *
 
+#todo: add thief, assassin, wizard
+
 class Player(Character):
+	"""
+	Player character, that the user controls. 
+	"""
 	def __init__(self, name, level = 1, inventory = list()):
+		# todo: add 'equipped item' parameter to allow for recreation of character.
+		"""
+		generates a new character; option level and inventory parameters
+		allow for customization of characters.
+		"""
 		self.name = name
 		self.level = level
 		self.alive = True
@@ -19,25 +29,39 @@ class Player(Character):
 		}
 
 	def deal_damage(self, damage):
+		""" 
+		Deals damage to Player, an additional prompt of how the 
+		attack affects the Player.
+		"""
 		return super(Player, self).deal_damage(damage, "the dead body of " + self.name + " was attacked")
 
 	def level_up(self):
+		"""
+		Levels up the player
+		"""
 		super(Player, self).level_up(True)
 
 	def give_exp(self, amount):
+		"""
+		gives experience to character, and levels them up as necessary.
+		"""
 		super(Player, self).give_exp(amount, True)
 
 	def __repr__(self):
+		""" returns a representation of how to recreate the character. """
 		return (self.class_name + "(" + self.name + ", " + self.level + ", " +
 					 repr(self.inventory) + ")")
 
 	def __str__(self):
+		""" returns name and type of character. """
 		return self.name + " the " + self.class_name.lower()
 
 	def display_inventory(self):
+		""" displays inventory and gold. """
 		super(Player, self).display_inventory(True)
 
 	def equip_item(self):
+		""" allows user to equip Player with an item. """
 		super(Player, self).equip_item()
 
 class Warrior(Player):
@@ -56,6 +80,7 @@ class Warrior(Player):
 	}
 
 	def __init__(self, name, level = 1, inventory = list()):
+		""" Initializes a Warrior """
 		super(Warrior, self).__init__(name, level, inventory)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: 1.2,
@@ -105,6 +130,7 @@ class Monk(Player):
 	}
 	
 	def get_attack(self):
+		""" Modified get_attack that adds bonus damage if no weapon is equipped. """
 		if(self.equipped_weapon == None):
 			self.statistics_base["attack"] *= 2
 		damage = super(Monk, self).get_attack()
@@ -113,6 +139,7 @@ class Monk(Player):
 		return damage
 
 	def __init__(self, name, level = 1, inventory = list()):
+		""" initializes a monk """
 		super(Monk, self).__init__(name, level, inventory)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: 1.3,
@@ -161,6 +188,10 @@ class DarkKnight(Player):
 	}
 
 	def get_attack(self, isRanged = False, isMagic = False):
+		""" 
+		modified get_attack that takes a toll on it's user,
+		reducing their health
+		"""
 		life_loss = self.statistics_base["health"] / 10
 		self.current_health = max(0, self.current_health - life_loss)
 		if(self.current_health == 0):
@@ -172,6 +203,7 @@ class DarkKnight(Player):
 		return super(DarkKnight, self).get_attack(isRanged, isMagic)
 
 	def __init__(self, name, level = 1, inventory = list()):
+		""" Initializes a Dark Knight """
 		super(DarkKnight, self).__init__(name, level, inventory)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: 1.4,
@@ -206,6 +238,7 @@ class DarkKnight(Player):
 		self.inventory.append(Weapon.GreatAxe(1, 2, True))
 		self.equipped_weapon = self.inventory[0]
 
+# Quick reference to each type of Player object.
 CLASSES = {
 	"warrior" : Warrior,
 	"monk" : Monk,
