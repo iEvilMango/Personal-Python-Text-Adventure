@@ -4,6 +4,7 @@ from Shared import *
 
 def get_random_enemy(enemies_in_area, names_possible, level_min,
 							level_max, difficulty_min, difficulty_max):
+	""" Generates a random enemy with attributes from the given possibilities. """
 	chosen_enemy = random.choice(enemies_in_area)
 	chosen_name = random.choice(names_possible)
 	chosen_level = random.choice(range(level_min, level_max + 1))
@@ -11,9 +12,11 @@ def get_random_enemy(enemies_in_area, names_possible, level_min,
 	return TYPES[chosen_enemy](chosen_name, chosen_level, chosen_difficulty)
 
 class Monster(Character):
+	""" Monsters representing Characters for the Players to kill. """
 	difficulty_level = ("easy", "normal", "exceptional")
 
 	def __init__(self, name, level = 1, difficulty = 1):
+		""" Initializes a monster with given attributes."""
 		self.name = name
 		self.difficulty = difficulty
 		self.level = level
@@ -22,25 +25,35 @@ class Monster(Character):
 		self.experience = 0
 
 	def deal_damage(self, damage):
+		""" 
+		Deals damage to the monster.
+		Chastises user if the monter is dead.
+		"""
 		return super(Monster, self).deal_damage(damage, "attacking the dead creature has no effect")
 
 	def level_up(self):
+		""" Levels up the Monster"""
 		super(Monster, self).level_up(False)
 
 	def give_exp(self, amount):
+		""" gives experience to the Monster, leveling up as necessary. """
 		super(Monster, self).give_exp(amount, False)
 
 	def __repr__(self):
+		""" returns a representation of how to recreate the Monster"""
 		return (self.class_name + "(" + self.name + ", " + 
 						self.level + ", " + self.difficulty + ")")
 
 	def __str__(self):
+		""" returns a user friendly description of the monster """
 		return self.name + " the " + self.class_name.lower()
 
 	def display_inventory(self):
+		""" Displays what the monster owns """
 		super(Monster, self).display_inventory(False)
 
 	def equip_item(self):
+		""" equips item to monster """
 		super(Monster, self).equip_item()
 
 class Goblin(Monster):
@@ -59,6 +72,7 @@ class Goblin(Monster):
 	}
 
 	def __init__(self, name, level = 1, difficulty = 1):
+		""" Creates a goblin """
 		super(Goblin, self).__init__(name, level, difficulty)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: .8,
@@ -115,6 +129,7 @@ class Dragon(Monster):
 	}
 
 	def __init__(self, name, level = 1, difficulty = 1):
+		""" creates a dragon """
 		super(Dragon, self).__init__(name, level, difficulty)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: 1.2,
@@ -169,6 +184,7 @@ class Eagle(Monster):
 	}
 
 	def __init__(self, name, level = 1, difficulty = 1):
+		""" Creates an eagle """
 		super(Eagle, self).__init__(name, level, difficulty)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: 1.2,
@@ -223,6 +239,7 @@ class DireWolf(Monster):
 	}
 
 	def __init__(self, name, level = 1, difficulty = 1):
+		""" Creates a dire wolf """
 		super(DireWolf, self).__init__(name, level, difficulty)
 		self.modifiers = {		# modifiers for equipment
 			"melee"				: 1.3,
@@ -262,6 +279,7 @@ class DireWolf(Monster):
 			"items"			: self.inventory
 		}
 
+# quick access to each type of Monster
 TYPES = {
 	"goblin" 		: Goblin,
 	"dragon" 		: Dragon,
