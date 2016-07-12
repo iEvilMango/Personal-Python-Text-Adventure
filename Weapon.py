@@ -171,7 +171,7 @@ class Weapon(object):
 
 		modifier = 1.5 if random.randint(0,100) < self.stats["critical"] else 1
 		# modifier *= (random.randint(0, 30) + 85) / 100
-		modifer *= random_range(1, 30)
+		modifier *= random_range(1, 30)
 
 		output = (
 			int(round(self.stats["close_range"] * modifier)),

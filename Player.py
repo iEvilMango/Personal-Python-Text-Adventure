@@ -2,6 +2,7 @@ import Weapon
 import Monster
 import random
 from Shared import *
+from Names import NAME_GENERATORS, NAME_TYPES
 
 #todo: add thief, assassin, wizard
 

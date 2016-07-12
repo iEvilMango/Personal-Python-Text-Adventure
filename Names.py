@@ -1,4 +1,7 @@
-import itertools
+# import itertools
+
+### For reference, these two maps are defined at the bottom, but are repeated ###
+### here for ease of use ###
 
 # NAME_TYPES = {"male first" : MALE_FIRST,
 # "fantasy first" : FANTASY_FIRST,
@@ -14,6 +17,7 @@ import itertools
 
 ### names taken from http://random-name-generator.info/ ###
 FEMALE_FIRST = """
+    Bubbles
     Aaron
     Abbey
     Abbie
@@ -2120,6 +2124,7 @@ FEMALE_FIRST = """
     Katlyn
     Katrice
     Katrina
+    Katrin
     Kattie
     Katy
     Kay
@@ -10107,6 +10112,7 @@ LAST_NAMES = """
     Stein
     Steinberg
     Steiner
+    Stengel
     Stephen
     Stephens
     Stephenson
@@ -10704,7 +10710,6 @@ LAST_NAMES = """
     Zimmerman
     Zook
     Zuniga 
-
 """.split()
 
 NAME_TYPES = {"male first" : MALE_FIRST,

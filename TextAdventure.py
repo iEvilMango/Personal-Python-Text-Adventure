@@ -2,6 +2,7 @@ import Monster
 import Weapon
 import Player
 import random
+from Names import NAME_GENERATORS, NAME_TYPES
 from Shared import *
 
 def check_loot (drops, player):
@@ -52,8 +53,10 @@ def fight(enemy, player):
 		game_over(player)
 
 
-player_name = input("what's your name? ")
-print("")
+# player_name = input("what's your name? ")
+player_name = random.choice(NAME_GENERATORS["male"] + NAME_GENERATORS["female"])
+print("Your name is " + player_name)
+#print("")
 class_choice = prompt_for("which class do you want to play as? ",
 								tuple(Player.CLASSES.keys()))
 player = Player.CLASSES[class_choice](player_name)
@@ -61,29 +64,29 @@ player.display_inventory()
 
 move = "None don't work here"
 
-while(True): 
-	if (player.alive):
-		move = "None don't work here"
-		while (move.lower() != "fight the dragon" and move.lower() != "fight a goblin"):
-			print("what next?")
-			move = prompt_for("", ("display inventory", "equip item", "view equipped item",
-									"fight the dragon", "fight a goblin", "fight a random enemy",
-									"cheat"))
+while(player.alive): 
+	# if (player.alive):
+	move = "None don't work here"
+	# while (move.lower() != "fight the dragon" and move.lower() != "fight a goblin"):
+	print("what next?")
+	move = prompt_for("", ("display inventory", "equip item", "view equipped item",
+							"fight the dragon", "fight a goblin", "fight a random enemy",
+							"cheat"))
 
-			if (move.lower() ==  "display inventory"):
-				player.display_inventory()
-			elif (move.lower() == "equip item"):
-				player.equip_item()
-			elif (move.lower() == "cheat"):
-				player.give_exp(100000)
-				weapon = Weapon.TYPES["longsword"](3, 10, True)
-				player.inventory.append(weapon)
-			elif (move.lower() == "fight the dragon"):
-				fight(Monster.TYPES["dragon"]("dragosan", 10, 1), player)
-			elif (move.lower() == "fight a goblin"):
-				fight(Monster.TYPES["goblin"]("gobbinmon"), player)
-			elif (move.lower() == "fight a random enemy"):
-				fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), ("rando", "bubbles"), 3, 10, 0, 2),
-							player)
-			elif (move.lower() == "view equipped item"):
-				player.view_equipped()
+	if (move.lower() ==  "display inventory"):
+		player.display_inventory()
+	elif (move.lower() == "equip item"):
+		player.equip_item()
+	elif (move.lower() == "cheat"):
+		player.give_exp(100000)
+		weapon = Weapon.TYPES["longsword"](3, 10, True)
+		player.inventory.append(weapon)
+	elif (move.lower() == "fight the dragon"):
+		fight(Monster.TYPES["dragon"]("dragosan", 10, 1), player)
+	elif (move.lower() == "fight a goblin"):
+		fight(Monster.TYPES["goblin"]("gobbinmon"), player)
+	elif (move.lower() == "fight a random enemy"):
+		fight(Monster.get_random_enemy(tuple(Monster.TYPES.keys()), 3, 10, 0, 2),
+					player)
+	elif (move.lower() == "view equipped item"):
+		player.view_equipped()

@@ -59,6 +59,8 @@ class Character(object):
 		"""
 		if (self.equipped_weapon != None):
 			attack_base = self.equipped_weapon.get_attack()
+			if ((attack_base) == (0, 0, 0, 0)):
+				return attack_base
 		else:
 			attack_base = (0, 0, 0, 0)
 		melee_bonus = 0
