@@ -1,11 +1,11 @@
-# import itertools
+from random import choice
 
 ### For reference, these two maps are defined at the bottom, but are repeated ###
 ### here for ease of use ###
 
-# NAME_TYPES = {"male first" : MALE_FIRST,
-# "fantasy first" : FANTASY_FIRST,
-# "female first" : FEMALE_FIRST, 
+# NAME_TYPES = {"male" : MALE_FIRST,
+# "fantasy" : FANTASY_FIRST,
+# "female" : FEMALE_FIRST, 
 # "last names" : LAST_NAMES}
 
 
@@ -14,6 +14,10 @@
 #     "female" : [first + " " + last for first in FEMALE_FIRST for last in LAST_NAMES],
 #     "male" : [first + " " + last for first in MALE_FIRST for last in LAST_NAMES]
 # }
+
+def name_generator(type):
+    return choice(NAME_TYPES[type]) + " " + choice(LAST_NAMES)
+
 
 ### names taken from http://random-name-generator.info/ ###
 FEMALE_FIRST = """
@@ -10712,19 +10716,14 @@ LAST_NAMES = """
     Zuniga 
 """.split()
 
-NAME_TYPES = {"male first" : MALE_FIRST,
-"fantasy first" : FANTASY_FIRST,
-"female first" : FEMALE_FIRST, 
+NAME_TYPES = {"male" : MALE_FIRST,
+"fantasy" : FANTASY_FIRST,
+"female" : FEMALE_FIRST, 
 "last names" : LAST_NAMES}
 
-# NAME_GENERATORS = {
-#     "fantasy" : list(itertools.product(FANTASY_FIRST, LAST_NAMES)),
-#     "female" : list(itertools.product(FEMALE_FIRST, LAST_NAMES)),
-#     "male" : list(itertools.product(MALE_FIRST, LAST_NAMES))
-# }
 
-NAME_GENERATORS = {
-    "fantasy" : [first + " " + last for first in FANTASY_FIRST for last in LAST_NAMES],
-    "female" : [first + " " + last for first in FEMALE_FIRST for last in LAST_NAMES],
-    "male" : [first + " " + last for first in MALE_FIRST for last in LAST_NAMES]
-}
+# NAME_GENERATORS = {
+#     "fantasy" : [first + " " + last for first in FANTASY_FIRST for last in LAST_NAMES],
+#     "female" : [first + " " + last for first in FEMALE_FIRST for last in LAST_NAMES],
+#     "male" : [first + " " + last for first in MALE_FIRST for last in LAST_NAMES]
+# }

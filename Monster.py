@@ -1,15 +1,18 @@
 import random
 import Weapon
 from Shared import *
-from Names import NAME_GENERATORS, NAME_TYPES
+from Names import name_generator, NAME_TYPES
 
 
 def get_random_enemy(enemies_in_area, level_min,
 							level_max, difficulty_min, difficulty_max,
-							names_possible = NAME_GENERATORS["fantasy"]):
+							names_possible = None):
 	""" Generates a random enemy with attributes from the given possibilities. """
 	chosen_enemy = random.choice(enemies_in_area)
-	chosen_name = random.choice(names_possible)
+	if(names_possible is None):
+		chosen_name = name_generator("fantasy")
+	else:
+		chosen_name = random.choice(names_possible)
 	chosen_level = random.choice(range(level_min, level_max + 1))
 	chosen_difficulty = random.choice(range(difficulty_min, difficulty_max + 1))
 	return TYPES[chosen_enemy](chosen_name, chosen_level, chosen_difficulty)

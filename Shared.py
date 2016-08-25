@@ -38,15 +38,18 @@ def random_range(base_value, percent_range):
 def getRoundedStr(input, decimals = 0):
 	"""
 	Converts an integer to a rounded value represented as a string.
-	Optional decimals parameter allows for control over how much value is rounded; 1 rounds to the tenths, -1 to the tens.
+	Optional decimals parameter allows for control over how much value is rounded;
+	1 rounds to the tenths, -1 to the tens.
 	When decimals is 0 or less (i.e. rounded to the ones place or higher),
 	leaves string as an Integer; otherwise, represents string as a double.
 	"""
-	round_value = pow(10, decimals)
+	round_value = 10 ** decimals
 	return_value = int(round(input * (round_value))) / round_value
 	return_value = return_value if decimals > 0 else int(return_value)
 	return str(return_value)
 
+
+### todo: add "special attack / move" dict to allow for bonus options ###
 class Character(object):
 	"""
 	Character object represents characters; that currently includes Players,

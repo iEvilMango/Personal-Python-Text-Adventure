@@ -2,7 +2,7 @@ import Monster
 import Weapon
 import Player
 import random
-from Names import NAME_GENERATORS, NAME_TYPES
+from Names import name_generator, NAME_TYPES
 from Shared import *
 
 def check_loot (drops, player):
@@ -54,7 +54,7 @@ def fight(enemy, player):
 
 
 # player_name = input("what's your name? ")
-player_name = random.choice(NAME_GENERATORS["male"] + NAME_GENERATORS["female"])
+player_name = random.choice((name_generator("male"), name_generator("female")))
 print("Your name is " + player_name)
 #print("")
 class_choice = prompt_for("which class do you want to play as? ",
